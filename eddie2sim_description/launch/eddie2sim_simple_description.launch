@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- RVIZ ARGUMENT -->
+    <arg name="rviz_config" default="$(find eddie2sim_description)/rviz_config/eddie2sim_gazebo.rviz"/>
+
+    <!-- ROBOT POSITION IN SOLUSTAR MAP -->
+    <!-- <arg name="x" default="-0.77"/>
+    <arg name="y" default="3.69"/>
+    <arg name="z" default="0"/>
+    <arg name="roll" default="0"/>
+    <arg name="pitch" default="0"/>
+    <arg name="yaw" default="-1.57"/> -->
+
+    <!-- ROBOT POSITION IN SIMPLE MAP -->
+    <arg name="x" default="2.92"/>
+    <arg name="y" default="-5.12"/>
+    <arg name="z" default="0"/>
+    <arg name="roll" default="0"/>
+    <arg name="pitch" default="0"/>
+    <arg name="yaw" default="1.57"/>
+    
+    <!-- MAP AND ROBOT -->
+    <arg name="world" default="simple" doc="world type [simple, floor1, floor2, floor3]"/>
+    <arg name="robot" default="eddie2sim" doc="robot type [val2sim, simple_bot]"/>
+    
+    <!-- EDDIE2 BRINGUP -->
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(find eddie2sim_description)/urdf/$(arg robot).xacro"/>  
+    
+    <!-- SHOW UP COORDINATE FRAMES -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+        <param name="publish_frequency" value="50"/>
+        <param name="use_tf_static" value="true"/>
+    </node>
+
+    <!-- JOINT BRINGUP -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+    <!-- RVIZ -->
+    <!-- visualization for verify robot status -->
+    <!-- <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(arg rviz_config)"/> -->
+
+    <!-- LAUNCH GAZEBO -->
+    <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find eddie2sim_gazebo)/worlds/$(arg world).world"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="recording" value="false"/>
+        <arg name="debug" value="false"/>
+        <arg name="verbose" value="false"/>
+    </include>
+
+    <!-- SPAWN ROBOT -->
+    <!-- Spawn the eddie2 robot model in to the world -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-file $(find eddie2sim_description)/urdf/$(arg robot).urdf -urdf -model eddie2sim
+        -x $(arg x) -y $(arg y) -z $(arg z)
+        -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)">
+    </node>
+
+    <!-- JOY BRINGUP -->
+    <!-- joy node and joy command subscriber node -->
+    <include file="$(find sim_teleop_joy)/launch/sim_joy_bringup.launch" />
+
+    <!-- EDDIE2 TWIST MUX NODE -->
+    <!-- order the priority of each velocity command -->
+    <include file="$(find twist_mux)/launch/twist_mux.launch" />
+
+</launch>
+

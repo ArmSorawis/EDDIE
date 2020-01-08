@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- SETUP OBSTACLE DETECTION VAL2 FSM NODE -->
+    <node name="eddie2sim_fsm_node"  pkg="eddie2sim_fsm"    type="eddie2sim_fsm.py"  output="screen"/>
+
+</launch>

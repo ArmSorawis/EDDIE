@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<launch>
+    
+    <!-- ARGUMENTS -->
+    <arg name="map_folder" default="simple" doc="map type [simple, floor]"/>
+    <arg name="map_name" default="simple_loc" doc="map type [simple_loc, floor1_loc, floor2_loc, floor3_loc]"/>
+    <arg name="goal_name" default="floor1_goal" doc="goal type [floor1_goal, floor2_goal, floor3_goal]"/>
+    <arg name="map_file" default="$(find eddie2sim_localization)/maps/$(arg map_folder)/$(arg map_name).yaml"/>
+
+    <!-- EDDIE2 SIMULATION NODE -->
+    <include file="$(find eddie2sim_description)/launch/eddie2sim_simple_description.launch" />
+
+    <!-- LOAD MAP --> 
+    <!-- map server for localization -->
+    <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)">
+        <param name="frame_id" value="map"/> 
+    </node> 
+
+    <!-- AMCL NODE -->
+    <!-- localization node -->
+    <node pkg="amcl" type="amcl" name="amcl" output="screen">
+        <rosparam file="$(find eddie2sim_localization)/parameters/amcl_simparams.yaml" command="load"/>
+    </node>
+
+    <!-- GOAL TRANSFORM -->
+    <!-- <include file="$(find eddie2sim_bringup)/launch/goal_frame/$(arg goal_name).launch" /> -->
+
+    <!-- RVIZ -->
+    <!-- visualization for verify robot status -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find eddie2sim_localization)/rviz_config/amcl_simlocalization.rviz"/> -->
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find eddie2sim_navigation)/rviz_config/eddie2sim_navigation.rviz">
+    </node>
+
+</launch>

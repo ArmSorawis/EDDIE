@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- KEYBOARD VELOCITY CONFIGURATION -->
+    <arg name="linear_vel_max" default="0.35"/> <!-- maximum linear velocity -->
+    <arg name="linear_vel_step" default="0.05"/> <!-- linear velocity increase and decrease step -->
+    <arg name="angular_vel_max" default="0.45"/> <!-- maximum angular velocity -->
+    <arg name="angular_vel_step" default="0.05"/> <!-- angular velocity increase and decrease step -->
+
+    <!-- KEYBOARD TELEOPERATION NODE -->
+    <node pkg="sim_teleop_keyboard" name="sim_teleop_key_node" type="sim_teleop_key.py" output="screen">
+        <param name="linear_vel_max" value="$(arg linear_vel_max)"/>
+        <param name="angular_vel_max" value="$(arg angular_vel_max)"/>
+        <param name="linear_vel_step" value="$(arg linear_vel_step)"/>
+        <param name="angular_vel_step" value="$(arg angular_vel_step)"/>
+    </node>
+
+</launch>

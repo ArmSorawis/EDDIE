@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- EDDIE2 SIMULATION NODE -->
+    <!--  <include file="$(find eddie2sim_description)/launch/eddie2sim_description.launch" /> -->
+
+    <arg name="num_floor" default="floor1" doc="floor type [floor1, floor2, floor3]"/> 
+    <!-- <arg name="map_folder" default="simple" doc="map type [simple]"/>
+    <arg name="map_name" default="simple_loc" doc="map type [simple_loc]"/>
+    <arg name="map_file" default="$(find eddie2sim_localization)/maps/$(arg map_folder)/$(arg map_name).yaml"/> -->
+  
+    <!-- LOAD MAP --> 
+    <!--  <node pkg="map_server" type="map_server" name="map_server" args="$(arg map_file)">
+        <param name="frame_id" value="map"/> 
+    </node> -->
+
+    <!-- coordinate frame setting at 3 meters in front relative to the initial position -->
+    <node pkg="tf" type="static_transform_publisher" name="odom_to_station1"
+    args="3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 /map_$(arg num_floor) /room1 40"/>
+
+    <!-- coordinate frame setting at 3 meters in front relative to the initial position -->
+    <node pkg="tf" type="static_transform_publisher" name="odom_to_station1"
+    args="3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 /map_$(arg num_floor) /room2 40"/>
+
+    <!-- coordinate frame setting at 3 meters in front relative to the initial position -->
+    <node pkg="tf" type="static_transform_publisher" name="odom_to_station1"
+    args="3.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 /map_$(arg num_floor) /room3 40"/>
+
+    <!-- coordinate frame setting at 180 different rotation degrees relative to the initial position-->
+    <node pkg="tf" type="static_transform_publisher" name="odom_to_base_station"
+    args="0.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0 /map_$(arg num_floor) /base_station 40"/>
+
+    <!-- coordinate frame setting at the initial position-->
+    <node pkg="tf" type="static_transform_publisher" name="odom_to_charging_station"
+    args="0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 /map_$(arg num_floor) /charging_station 40"/>
+    
+    <!--  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find eddie2sim_bringup)/rviz_config/view_goalFrame.rviz">
+    </node> -->
+
+</launch>
+
